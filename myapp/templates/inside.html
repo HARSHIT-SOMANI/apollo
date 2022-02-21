@@ -15,26 +15,40 @@
 
 <body >
   
-    <form id="ticketsform">
+    <form action="/fileu" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" value="{{fname}}" name="username">
-        <input type="text" value="title is 1" name="title" id="title">
-        <input type="text" value="title is 2" name="description" id="description">
-        <input type="submit">
-    </form> 
-    <script>
-        const ticketsForm=document.getElementById('ticketsform');
-        ticketsForm.addEventListener('submit',async function (e){
-            e.preventDefault();
-            const ticketsformdata=new FormData(ticketsForm).entries()
-            const response=await fetch('http://127.0.0.1:8000/signi',{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(Object.fromEntries(ticketsformdata))
-            });
-            const result=await response.json();
-            console.log(result)
-        });
-    </script>
+        <input type="text" name="title" style="color: black;" >
+        <input type="text" name="body" style="color: black;" >
+        <button type="submit">submit</button>
+    </form>
+    {%if p%}
+    <table style="width:100%" id="mytable" class="content-table" > 
+        <thead> 
+        <tr>
+          <th style="width:10%; font-weight: bold;">TITLE</th>
+          <th style="width:65%; font-weight: bold;">BODY</th>
+          <th style="width:5%; font-weight: bold;">Last updated by you</th>
+          <th style="width:5%; font-weight: bold;">status</th>
+          <th style="width:10%; font-weight: bold;">remarks</th>
+          <th style="width:5%; font-weight: bold;">Last updated by admin</th>
+        </tr>
+        </thead>
+        <tbody>
+        {%for content in p%}
+        <tr>
+          <td style="width:20%">{{content.title}}</td>
+          <td style="width:70%">{{content.body}}</td>
+        </tr>
+        {%endfor%}
+        </tbody> 
+      </table>
+    {%else%}
+    <div class="wave">
+      <img src="{% static 'images/wave.svg'%}">
+    </div>
+    {%endif%}
+    
+
 </body>
 </html>

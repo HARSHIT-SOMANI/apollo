@@ -6,4 +6,5 @@ urlpatterns=[
     path('signu',views.signup,name='signupd'),
     path('signi',views.signin,name='signind'),
     path('signo',views.signout,name='signoutd'),
+    path('fileu',views.fileread,name='filereadd'),
 ]

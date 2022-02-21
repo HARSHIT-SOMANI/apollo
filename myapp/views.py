@@ -1,3 +1,6 @@
+#super user ,useid:admin pwd:1
+
+import imp
 from telnetlib import STATUS
 from django.shortcuts import redirect, render
 from django.urls.conf import path
@@ -5,11 +8,14 @@ from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-#from .models import uploads,article
+from .models import ticket
+from datetime import datetime
 #from .serializers import articleserializer,uploadserializer
 #from rest_framework.parsers import JSONParser
 #from django.views.decorators.csrf import csrf_exempt
 import json
+
+from myapp.models import ticket
 
 
 
@@ -45,22 +51,27 @@ def signup(request):
             return redirect('signind')
     return render(request,'signup.html')
 
-def signin(request):
-    #print('#####in sinin function')
+
+def fileread(request):
+    user_is=request.POST['username']
     if request.method=='POST':
-        #print('#####in sinin function222')
+            k=ticket.objects.create(title=request.POST['title'])
+            k.body=request.POST['body']
+            k.username1=user_is
+            k.save()
+    p=ticket.objects.filter(username1=user_is)
+    print('p is',p)
+    return render(request,'inside.html',{'p':p,'fname':user_is})
+
+def signin(request):
+    if request.method=='POST':
         uname=request.POST['username3']
         pwd=request.POST['password3']
         User=authenticate(username=uname,password= pwd)
-        #print('user is',User)
-        #p=uploads.objects.all()
+        p=ticket.objects.filter(username1=User)
         if User is not None:
-            #print('#####in sinin function33333')
-            #login(request,User)
-            #print('******sinin function5555555')
-            return render(request,'inside.html',{'fname':User})
+            return render(request,'inside.html',{'p':p,'fname':User})
         else:
-            print('#####in sinin function4444')
             messages.info(request,'wrong password')
             return redirect('signind')
     #y=uploads.objects.all()    
