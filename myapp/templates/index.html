@@ -1,0 +1,54 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css'%}">
+  <style>
+    *{
+            margin: 0;
+            outline: none;
+            box-sizing: border-box;
+        }        
+        body{
+            font-family: Space Grotesk;
+            background-color: #1E1F31;
+            overflow-x: hidden;
+        }
+  </style>
+</head>
+<body >
+  <div class="wrapper">
+    <header>
+      <nav>
+      <ul>
+        <li> <a class="btn" href="signu">signup</a> </li>
+        <li> <a class="btn" href="signi">signin</a> </li>
+      </ul>
+      </nav>
+    </header>
+    <div class="content">
+      <div class="headin">
+        <h>Ticket system</h>
+      </div>
+      <div class="indextext">You can raise your complaints here </div>
+    </div>
+    <div class="wave">
+      <img src="{% static 'images/wave.svg'%}">
+    </div>
+  </div>
+  <!-- <div style="margin-top: 300px; margin-left: 500px;">
+    <button type="submit" style="font-size: 50px; background-color: yellowgreen" class="indexbutton">
+      <a href="signu"> signup </a>
+    </button>
+    <button type="submit" style="margin-left: 30px; font-size: 50px; background-color: yellowgreen;">
+        <a href="signi"> signin </a>
+      </button>
+      {% csrf_token %}
+    </div>  
+         -->
+</body>
+</html>

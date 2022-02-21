@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css'%}">
+    <script src="{% static 'frontend.js'%}"></script>
+    <style>
+      body{background-color: #1E1F31;}
+    </style>
+  </head>
+
+<body >
+  
+    <form id="ticketsform">
+        {% csrf_token %}
+        <input type="hidden" value="{{fname}}" name="username">
+        <input type="text" value="title is 1" name="title" id="title">
+        <input type="text" value="title is 2" name="description" id="description">
+        <input type="submit">
+    </form> 
+    <script>
+        const ticketsForm=document.getElementById('ticketsform');
+        ticketsForm.addEventListener('submit',async function (e){
+            e.preventDefault();
+            const ticketsformdata=new FormData(ticketsForm).entries()
+            const response=await fetch('http://127.0.0.1:8000/signi',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(Object.fromEntries(ticketsformdata))
+            });
+            const result=await response.json();
+            console.log(result)
+        });
+    </script>
+</body>
+</html>

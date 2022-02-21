@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <script src="{% static 'frontend.js'%}"></script>
+    <style>
+        *{
+                margin: 0;
+                outline: none;
+                box-sizing: border-box;
+            }        
+            body{
+                font-family: Space Grotesk;
+                background-color: #1E1F31;
+                overflow-x: hidden;
+            }
+      </style>
+</head>
+<body >
+    <div class="wrapper">
+    <form action="/signi" method="post" class="form" >
+        {% csrf_token %}
+        <h1 class="title">signin form</h1>
+        <!-- <label for="">Username</label> -->
+        <div class="inputcontainer">
+        <input type="text" class="input" id="username3" name="username3" placeholder="username" required>
+        </div>
+        <!-- <label for="">password</label> -->
+        <div class="inputcontainer">
+        <input type="password" class="input" id="password3" name="password3" placeholder="password" required>
+        <span style="position: relative; left:-40px;"><i class="far fa-eye" id="togglePassword3" onclick="toggle(id)"></i></span>
+            <div style="position:relative ;  text-align: left; color: red; font-weight: bold;">
+            {%for message in messages%}
+            {{message}}
+            {%endfor%}    
+            </div>
+        </div>
+        <br>
+        <button type="submit" class="submitBtn">submit</button>
+        <p>dont have  an account? <a href="signu">signup</a> </p>
+    </form>
+    <div class="wave">
+        <img src="{% static 'images/wave.svg'%}">
+      </div>
+</div>
+
+</body>
+</html>
