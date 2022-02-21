@@ -10,6 +10,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import ticket
 from datetime import datetime
+from time import strftime
+from django.views.decorators.csrf import csrf_exempt
+from .serializers import ticketserializer
+from rest_framework.parsers import JSONParser
 #from .serializers import articleserializer,uploadserializer
 #from rest_framework.parsers import JSONParser
 #from django.views.decorators.csrf import csrf_exempt
@@ -58,6 +62,8 @@ def fileread(request):
             k=ticket.objects.create(title=request.POST['title'])
             k.body=request.POST['body']
             k.username1=user_is
+            print('###############time is',datetime.now().strftime("%Y-%m-%d,%H:%M:%S"))
+            k.date=datetime.now().strftime("%m-%d, %H:%M:%S")
             k.save()
     p=ticket.objects.filter(username1=user_is)
     print('p is',p)
@@ -68,8 +74,12 @@ def signin(request):
         uname=request.POST['username3']
         pwd=request.POST['password3']
         User=authenticate(username=uname,password= pwd)
-        p=ticket.objects.filter(username1=User)
-        if User is not None:
+        print('##############################user is',User)
+        if(User=='admin'):
+            p=ticket.objects.all()
+            return render(request,'inside2.html',{'p':p,'fname':User})
+        elif User is not None:
+            p=ticket.objects.filter(username1=User)
             return render(request,'inside.html',{'p':p,'fname':User})
         else:
             messages.info(request,'wrong password')
@@ -82,3 +92,46 @@ def signin(request):
 def signout(request):
     logout(request)
     return redirect('indexd')
+
+@csrf_exempt                                                    #not required for  GET request
+def ticketlist(request):
+    print('########################insideticketlist1')
+    if request.method=='GET':
+        print('########################insideticketlist2')
+        #articleobjects=article.objects.Get()
+        #articleserilized=articleserializer(articleobjects)  if one object many=true is not needed
+        ticketobjects=ticket.objects.all()
+        ticketserilized=ticketserializer(ticketobjects,many=True)
+        return JsonResponse(ticketserilized.data,safe=False)
+    elif request.method=='POST':
+        print('########################insideticketlist3')
+        data=JSONParser().parse(request)
+        ticketserilized=ticketserializer(data=data)
+        if ticketserilized.is_valid():
+            print('########################insideticketlist4')
+            ticketserilized.save()
+            return JsonResponse(ticketserilized.data,status=201)
+        return JsonResponse(ticketserilized.errors,status=400)
+
+@csrf_exempt
+def ticketdetail(request,input1):
+    print('########################insideticketlist5')
+    try:
+        ticketobjects=ticket.objects.get(title=input1)
+    except:
+        return HttpResponse(status=404)
+    if request.method=='GET':
+        print('########################insideticketlist6')
+        ticketserilized=ticketserializer(ticketobjects)
+        return JsonResponse(ticketserilized.data,safe=False)
+    elif request.method=='PUT':
+        print('########################insideticketlist7')
+        data=JSONParser().parse(request)
+        ticketserilized=ticketserializer(ticketobjects,data=data)
+        if ticketserilized.is_valid():
+            ticketserilized.save()
+            return JsonResponse(ticketserilized.data)
+        return JsonResponse(ticketserilized.errors,status=400)
+    elif request.method =='DELETE':
+        ticketobjects.delete()
+        return HttpResponse(status=204)    

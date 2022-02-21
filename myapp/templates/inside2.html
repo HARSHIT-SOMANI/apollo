@@ -11,45 +11,15 @@
     <style>
       body{background-color: #1E1F31;}
     </style>
-   
   </head>
 
 <body >
-  <script>
-      function checktype(){
-    console.log('this is');
-    const thisForm=document.getElementById('myForm');
-    console.log('this form is',thisForm);
-    thisForm.addEventListener('submit',async function(e){
-    e.preventDefault();
-    console.log('inform1');
-    const formData=new FormData(thisForm).entries();
-    console.log('formdtv is',formData);
-    var jsonfileis=JSON.stringify(Object.fromEntries(formData));
-    delete jsonfileis["csrfmiddlewaretoken"]
-    console.log('json is',jsonfileis);
-    const response=await fetch('http://127.0.0.1:8000/article',{
-        method:'POST',
-        headers:{'Content-type':'application/json'},
-        body:jsonfileis
-    });
-    const result =response;
-    console.log(result);
-    return true;    
-})
-}
-  </script>
-    <form id="myForm">
-        {% csrf_token %}
-        <input type="hidden" value="{{fname}}" id="username" name="username">
-        <input type="text" name="title" id="title" style="color: black;" >
-        <input type="text" name="body" id="body" style="color: black;" >
-        <button onclick="return checktype()">submit</button>
-    </form>
+  
     {%if p%}
     <table style="width:100%" id="mytable" class="content-table" > 
         <thead> 
         <tr>
+          <th style="width:10%; font-weight: bold;">Username</th>
           <th style="width:10%; font-weight: bold;">TITLE</th>
           <th style="width:65%; font-weight: bold;">BODY</th>
           <th style="width:5%; font-weight: bold;">Last updated by you</th>
@@ -61,9 +31,10 @@
         <tbody>
         {%for content in p%}
         <tr>
-          <td style="width:10%">{{content.title}}</td>
-          <td style="width:65%">{{content.body}}</td>
-          <td style="width:5%">{{content.date}}</td>
+          <td style="width:20%">{{content.username1}}</td>  
+          <td style="width:20%">{{content.title}}</td>
+          <td style="width:70%">{{content.body}}</td>
+          <td style="width:70%">{{content.date}}</td>
           <td style="width:5%">{{content.status}}</td>
           <td style="width:5%">{{content.remarks}}</td>
           <td style="width:5%">{{content.date2}}</td>
