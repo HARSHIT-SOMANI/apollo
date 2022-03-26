@@ -26,8 +26,15 @@
     const formData=new FormData(thisForm).entries();
     console.log('formdtv is',formData);
     var jsonfileis=JSON.stringify(Object.fromEntries(formData));
-    delete jsonfileis["csrfmiddlewaretoken"]
+    delete jsonfileis["username"]
     console.log('json is',jsonfileis);
+    console.log('json_type is',typeof(jsonfileis));
+    var copy ={};
+    for(var key in jsonfileis)
+    {console.log('key is',key);
+          
+    } 
+    console.log('copy is',copy);
     const response=await fetch('http://127.0.0.1:8000/article',{
         method:'POST',
         headers:{'Content-type':'application/json'},

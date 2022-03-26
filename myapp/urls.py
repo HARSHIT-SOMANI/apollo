@@ -9,4 +9,6 @@ urlpatterns=[
     path('fileu',views.fileread,name='filereadd'),
     path('article/',views.ticketlist),
     path('detail/<str:input1>/',views.ticketdetail),
+    path('article2/',views.ticket_responselist),
+    path('detail2/<str:input1>/',views.ticket_responsedetail),
 ]

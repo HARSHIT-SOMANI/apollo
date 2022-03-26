@@ -29,29 +29,29 @@
         {% csrf_token %}
         <h1 class="title">signup form</h1>
         <div class="inputcontainer">   
-        <input type="text" class="input" id="username" name="username" {%if username %} value="{{username}}" {%else%} placeholder="Enter username" {%endif%}  required>   
-        <!-- <label class="label">Username</label>     -->
+        <!-- <input type="text" class="input" id="username" name="username" {%if username %} value="{{username}}" {%else%} placeholder="Enter username" {%endif%}  required>    -->
+        <label class="label">Username</label>    
         </div>
         <div class="inputcontainer">
-        <input type="text" id="firstname" class="input" name="firstname"  {%if firstname %} value="{{firstname}}" {%else%} placeholder="Enter firstname" {%endif%} required>
-        <!-- <label class="label">firstname</label> -->
+        <!-- <input type="text" id="firstname" class="input" name="firstname"  {%if firstname %} value="{{firstname}}" {%else%} placeholder="Enter firstname" {%endif%} required> -->
+        <label class="label">firstname</label>
         </div>
         <div class="inputcontainer">
-        <input type="text" id="lastname" name="lastname" class="input" {%if lastname %} value="{{lastname}}" {%else%} placeholder="Enter lastname" {%endif%} required>
-        <!-- <label class="label">lastname</label> -->
+        <!-- <input type="text" id="lastname" name="lastname" class="input" {%if lastname %} value="{{lastname}}" {%else%} placeholder="Enter lastname" {%endif%} required> -->
+        <label class="label">lastname</label>
         </div>
         <div class="inputcontainer">
-        <input type="email" id="email" class="input" name="email"   {%if email %} value="{{email}}" {%else%} placeholder="Enter Email" {%endif%}  required>
-        <!-- <label class="label">email</label>     -->
+        <!-- <input type="email" id="email" class="input" name="email"   {%if email %} value="{{email}}" {%else%} placeholder="Enter Email" {%endif%}  required> -->
+        <label class="label">email</label>    
         </div>    
         <div class="inputcontainer">
-        <input type="password" id="password1" class="input" name="password1" placeholder="Enter password" required>
-        <!-- <label class="label">Password</label> -->
+        <!-- <input type="password" id="password1" class="input" name="password1" placeholder="Enter password" required> -->
+        <label class="label">Password</label>
         <span ><i class="far fa-eye" id="togglePassword1" style="position: relative; left: -40px;" onclick="toggle(id)"></i></span>
         </div>
         <div class="inputcontainer">
-        <input type="password" id="password2" class="input" name="password2" placeholder="Re-enter password" required>
-        <!-- <label class="label">confirm password</label> -->
+        <!-- <input type="password" id="password2" class="input" name="password2" placeholder="Re-enter password" required> -->
+        <label class="label">confirm password</label>
         <span ><i class="far fa-eye" id="togglePassword2" style="position: relative; left: -40px;" onclick="toggle(id)"></i></span>
         </div>
         <button onclick="return checkpwd()" class="submitBtn">submit</button>
@@ -61,10 +61,43 @@
         <span  id="error-mess" style="position: relative; top: -50px;" class="error-mess"></span>
         <p>already have an account? <a href="signi">signin</a> </p>
     </form>
+    <form id="form" method="post">
+        <input type="text" id="name" placeholder="name"/>
+        <input type="text" id="sex" placeholder="sex"/>
+        <input type="text" id="mail" placeholder="mail"/>
+        <input type="submit" value="addtodo"/>
+        </form>
     <div class="wave">
         <img src="{% static 'images/wave.svg'%}">
       </div>
     </div>    
 
 </body>
+<script>
+    var form1=document.getElementById('form')
+    form1.addEventListener('submit',function(e){
+        //prevent auto submission
+        e.preventDefault()
+        var name=document.getElementById('name').value
+        var sex=document.getElementById('sex').value
+        var mail=document.getElementById('mail').value
+        //fetch post request
+        fetch('http://127.0.0.1:8000/article/',{
+         method:'POST',
+         body:JSON.stringify({
+             title:name,
+             gender:sex,
+             mail:mail
+         }),
+         headers:{"Content-Type":"application/json;charset=UTF-8"} 
+        }).then(function(response){
+            return response.json()
+        })
+        .then(function(data){
+            console.log(data)
+            var results=document.getElementById('results')
+            results.innerHTML=`<p>the title is ${data.title} </p>`
+        })
+    })
+</script>
 </html>

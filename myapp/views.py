@@ -8,11 +8,11 @@ from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import ticket
+from .models import ticket, ticket_response
 from datetime import datetime
 from time import strftime
 from django.views.decorators.csrf import csrf_exempt
-from .serializers import ticketserializer
+from .serializers import ticketserializer,ticket_responseserializer
 from rest_framework.parsers import JSONParser
 #from .serializers import articleserializer,uploadserializer
 #from rest_framework.parsers import JSONParser
@@ -65,11 +65,14 @@ def fileread(request):
             print('###############time is',datetime.now().strftime("%Y-%m-%d,%H:%M:%S"))
             k.date=datetime.now().strftime("%m-%d, %H:%M:%S")
             k.save()
-    p=ticket.objects.filter(username1=user_is)
-    print('p is',p)
-    return render(request,'inside.html',{'p':p,'fname':user_is})
+    ticket_recieved=ticket.objects.filter(username1=user_is)
+    return render(request,'inside.html',{'p':ticket_recieved,'fname':user_is})
 
 def signin(request):
+    emp=ticket_response.objects.select_related()
+    print('emp is',emp)
+    p=ticket.objects.all()
+    print('p is',p)
     if request.method=='POST':
         uname=request.POST['username3']
         pwd=request.POST['password3']
@@ -106,6 +109,7 @@ def ticketlist(request):
     elif request.method=='POST':
         print('########################insideticketlist3')
         data=JSONParser().parse(request)
+        print('data is',data)
         ticketserilized=ticketserializer(data=data)
         if ticketserilized.is_valid():
             print('########################insideticketlist4')
@@ -134,4 +138,50 @@ def ticketdetail(request,input1):
         return JsonResponse(ticketserilized.errors,status=400)
     elif request.method =='DELETE':
         ticketobjects.delete()
-        return HttpResponse(status=204)    
+        return HttpResponse(status=204)
+
+@csrf_exempt                                                    #not required for  GET request
+def ticket_responselist(request):
+    print('########################insideticketlist1')
+    if request.method=='GET':
+        print('########################insideticketlist2')
+        #articleobjects=article.objects.Get()
+        #articleserilized=articleserializer(articleobjects)  if one object many=true is not needed
+        ticketobjects=ticket.objects.all()
+        ticketserilized=ticketserializer(ticketobjects,many=True)
+        return JsonResponse(ticketserilized.data,safe=False)
+    elif request.method=='POST':
+        print('########################insideticketlist3')
+        data=JSONParser().parse(request)
+        ticketserilized=ticketserializer(data=data)
+        if ticketserilized.is_valid():
+            print('########################insideticketlist4')
+            ticketserilized.save()
+            return JsonResponse(ticketserilized.data,status=201)
+        return JsonResponse(ticketserilized.errors,status=400)
+
+@csrf_exempt
+def ticket_responsedetail(request,input1):
+    print('########################insideticketlist5')
+    try:
+        print('######################inside try')
+        ticket_responseobjects=ticket_response.objects.select_related()
+        print('ticket_responseobjects is',ticket_responseobjects)
+    except:
+        print('######################inside except')
+        return HttpResponse(status=404)
+    if request.method=='GET':
+        print('########################insideticketlist6')
+        ticket_ressponseserilized=ticket_responseserializer(ticket_responseobjects)
+        return JsonResponse(ticket_ressponseserilized.data,safe=False)
+    elif request.method=='PUT':
+        print('########################insideticketlist7')
+        data=JSONParser().parse(request)
+        ticket_responseserilized=ticket_responseserializer(ticket_responseobjects,data=data)
+        print('#############################ticket_responseserilized is',ticket_responseserilized)
+        if ticket_responseserilized.is_valid():
+            ticket_responseserilized.save()
+            print('###################ticket_responseserilized.data is',ticket_responseserilized.data)
+            return JsonResponse(ticket_responseserilized.data)
+        return JsonResponse(ticket_responseserilized.errors,status=400)
+   

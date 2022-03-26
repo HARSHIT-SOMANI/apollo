@@ -1,5 +1,6 @@
 from datetime import date,datetime
 from time import time
+from tkinter import CASCADE
 from django.db import models
 
 # Create your models here.
@@ -15,6 +16,14 @@ class ticket(models.Model):
     #date2=models.DateTimeField(default=datetime.now)
     def __str__(self):
         return self.title
+
+class ticket_response(models.Model):
+    status=models.CharField(max_length=50,default='To do')
+    remarks=models.CharField(max_length=500)
+    date=models.CharField(max_length=500)
+    ticketid=models.ForeignKey(ticket,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.status 
         
 
 
